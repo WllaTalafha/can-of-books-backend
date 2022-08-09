@@ -17,7 +17,7 @@ mongo-module
 ---
 **Estimates**
 
-Name of feature: **Authentication**
+Name of feature: **mongo**
 
 Estimate of time needed to complete: **2 hours**
 
