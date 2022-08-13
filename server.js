@@ -1,25 +1,21 @@
 'use strict';
 
-// const bookModel=require('./modules/schema');
+const bookModel=require('./modules/schema');
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose=require('mongoose');
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 const PORT = process.env.PORT;
 
+
 mongoose.connect('mongodb://localhost:27017/bookshelf');
 
-const bookSchema = new mongoose.Schema({
-  title: String,
-  decription:String,
-  status:String
-});
-const Book = mongoose.model('book', bookSchema);
-
 function seedBooks(){
+
   const cleanCode= new Book({
     title: "Clean Code",
   decription:"Demonestrate how to build clean code !",
@@ -42,11 +38,13 @@ function seedBooks(){
 
 }
 
-/* seedBooks();*/
+/*
+// seedBooks();
+*/
 
 
 app.get('/books', (request, response) => {
-  Book.find({},(error,data)=>{
+  bookModel.Book.find({},(error,data)=>{
     if(error){
       response.status(500).send("error getting data");
     }
@@ -55,11 +53,54 @@ app.get('/books', (request, response) => {
     }
   });
 });
+app.post('/books',createNewBook);
+app.delete('/books/:id',removeBook);
+app.put('/books/:id',updateBook);
+
+function createNewBook(req,res){
+  const {newBook}= req.body;
+   const book=new bookModel.Book(newBook);
+    book.save();
+    res.status(201).send(book);
+
+}
+function removeBook(req,res){
+  console.log(req.params.id);
+
+  const id=req.params.id;
+
+  bookModel.Book.findByIdAndDelete(id).then(record=>{
+    res.send(record);
+  }).catch(error=>{
+    console.log(error);
+    res.status(500).send(error.message);
+  })
+}
+
+function updateBook(req,res){
+
+  const id=req.params.id;
+  const {data}=req.body;
+
+  console.log(id,data);
+  bookModel.Book.findByIdAndUpdate(id,data,{new:true}).then(record=>{
+    res.send(record);
+  }).catch(error=>{
+    console.log(error);
+    res.status(500).send(error.message);
+  });
+
+}
+app.get('/test', (request, response) => {
+
+  response.send('test request received')
+
+});
 
 app.get('*', (request, response) => {
 
   response.send('No requests(end point) !')
 
-})
+});
 
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
