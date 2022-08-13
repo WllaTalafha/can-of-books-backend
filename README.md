@@ -26,3 +26,15 @@ Start time: **09:00 PM**
 Finish time: **11:00**
 
 Actual time needed to complete: **one hour**
+
+---
+
+Name of feature: **CRUD**
+
+Estimate of time needed to complete: **1 hours**
+
+Start time: **09:00 PM**
+
+Finish time: **10:00 pm**
+
+Actual time needed to complete: **30 min**
